@@ -23,23 +23,25 @@
   <p id="thankYouMessage">Thank you for submitting!</p>
 
   <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbw-UvjJUKtAPnKBNRdVGJq3qy0BMJzVzpVU2glBUlc1OqyQKxkRwqxojqyx90Edcjyn4g/exec'; // Replace with your actual Web App URL
+
     document.getElementById('addressForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      const newAddress = document.getElementById('address').value.trim();
-      if (!newAddress) return;
+      const address = document.getElementById('address').value.trim();
+      if (!address) return;
 
-      // Get existing addresses or initialize an empty array
-      const existing = JSON.parse(localStorage.getItem('userAddresses')) || [];
-
-      // Add the new address
-      existing.push(newAddress);
-
-      // Save back to localStorage
-      localStorage.setItem('userAddresses', JSON.stringify(existing));
-
-      // Show thank you message
-      document.getElementById('addressForm').style.display = 'none';
-      document.getElementById('thankYouMessage').style.display = 'block';
+      fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify({ address }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        document.getElementById('addressForm').style.display = 'none';
+        document.getElementById('thankYouMessage').style.display = 'block';
+      })
+      .catch(error => alert('Error submitting address: ' + error.message));
     });
   </script>
 </body>

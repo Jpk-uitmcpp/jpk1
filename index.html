@@ -1,48 +1,371 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Enter Address</title>
-  <style>
-    #thankYouMessage {
-      display: none;
-      color: green;
-      margin-top: 20px;
-      font-weight: bold;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1024">
+    <title>Maklumat Kolej UiTM Pulau Pinang</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="assets/icon_jpk.png"> <!-- Favicon Link -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        header {
+            background: #782982;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .content {
+            background: #fff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .college-section {
+            margin-bottom: 40px;
+        }
+
+        .college-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 20px;
+        }
+
+        .college-grid .college {
+            flex: 1 1 calc(33.333% - 20px);
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .college img {
+            width: 200px; /* Fixed width */
+            height: 200px; /* Fixed height */
+            object-fit: cover; /* Ensures the image covers the entire area without stretching */
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer; /* Add pointer cursor to indicate it's clickable */
+        }
+
+        .college-name {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #782982;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background: #782982;
+            color: #fff;
+            border-radius: 0 0 5px 5px;
+        }
+
+        .home-button {
+            position: absolute; /* Fixes the button in the viewport */
+            top: 10px;
+            left: 10px;
+            background-color: #782982;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s;
+            z-index: 1000; /* Ensures the button is on top of other content */
+        }
+
+        .home-button:hover {
+            background-color: #5a1f63;
+        }
+
+        /* Styles for date, time, and day */
+        .datetime-container {
+            text-align: right;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-right: 20px;
+        }
+
+        #currentDate, #currentTime {
+            display: block; /* Display each on a new line */
+        }
+
+        #currentDate {
+            font-weight: bold;
+        }
+
+        #currentTime {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* Styles for header */
+        .schedule-header {
+            background-color: #782982;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1001; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8); /* Black background with opacity */
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            position: relative;
+            margin: auto;
+            padding: 0;
+            width: 80%;
+            max-width: 700px;
+            background: #fff;
+            border-radius: 10px;
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            color: #fff;
+            font-size: 35px;
+            font-weight: bold;
+            transition: 0.3s;
+            z-index: 1002; /* On top of the modal */
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Hide the button by default */
+        #goTopBtn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #782982;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-weight: bold;
+            font-size: 18px;
+            display: none; /* Initially hidden */
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 0.3s, transform 0.3s; /* Transition effects */
+            opacity: 0; /* Fully transparent by default */
+            transform: translateY(20px); /* Start off below its final position */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #goTopBtn.show {
+            display: flex; /* Make the button visible */
+            opacity: 1; /* Fully opaque */
+            transform: translateY(0); /* Move to its final position */
+        }
+
+        #goTopBtn:hover {
+            background-color: #5a1f63;
+        }
+
+    </style>
 </head>
 <body>
-  <h2>Enter Your Home Address</h2>
-  <form id="addressForm">
-    <label for="address">Address:</label><br>
-    <textarea id="address" name="address" rows="4" cols="50" required></textarea><br><br>
-    <button type="submit">Submit</button>
-  </form>
 
-  <p id="thankYouMessage">Thank you for submitting!</p>
+<div class="schedule-header">
+    KOLEJ UiTM PULAU PINANG
+     <!-- Home Button -->
+   <!--<a href="menu.php" class="home-button">Home</a> --> 
+</div>
 
-  <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbw-UvjJUKtAPnKBNRdVGJq3qy0BMJzVzpVU2glBUlc1OqyQKxkRwqxojqyx90Edcjyn4g/exec'; // Replace with your actual Web App URL
+<!-- Go to top button -->
+<button id="goTopBtn">&#8679;</button>
 
-    document.getElementById('addressForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const address = document.getElementById('address').value.trim();
-      if (!address) return;
+<div class="datetime-container">
+    <span id="currentDate"></span>
+    <span id="currentTime"></span>
+</div> 
 
-      fetch(scriptURL, {
-        method: 'POST',
-        body: JSON.stringify({ address }),
-        headers: {
-          'Content-Type': 'application/json'
+    <div class="container">
+        <header>
+            <h1>Maklumat Kolej UiTM Pulau Pinang</h1>
+        </header>
+
+        <div class="content">
+            <p>UiTM Pulau Pinang banyak menyediakan perkhidmatan bagi memudahkan segala urusan semua mahasiswa/mahasiswi.</p>
+
+            <p>Antara perkhidmatan yang disediakan ialah kolej kediaman. Perkhidmatan kolej dikendalikan oleh Unit Residensi & Hospitaliti Pelajar (URHP). Segala masalah boleh mengenai kolej rujuk kepada pihak URHP. Dalam kawasan kampus UiTM Permatang Pauh terdapat tujuh blok kolej yang disediakan untuk mahasiswa/mahasiswi. Bagi pelajar yang tidak dapat perkhidmatan kolej, pihak UiTM Permatang Pauh juga menyediakan senarai rumah sewa di bawah Unit Non - Residen (NR).</p>
+
+            <p>Terdapat tujuh blok kediaman yang beroperasi dalam kampus dengan muatan 5798 orang (2584 siswa dan 3214 siswi).</p>
+
+            <!-- Kolej Siswa Section -->
+            <div class="college-section">
+                <h2>Kolej Siswa</h2>
+                <div class="college-grid">
+                    <div class="college">
+                        <img src="assets/delima.png" alt="Kolej Delima" class="enlargeable">
+                        <div class="college-name">KOLEJ DELIMA</div>
+                    </div>
+                    <div class="college">
+                        <img src="assets/intan.png" alt="Kolej Intan" class="enlargeable">
+                        <div class="college-name">KOLEJ INTAN</div>
+                    </div>
+                    <div class="college">
+                        <img src="assets/baiduri.png" alt="Kolej Baiduri" class="enlargeable">
+                        <div class="college-name">KOLEJ BAIDURI</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kolej Siswi Section -->
+            <div class="college-section">
+                <h2>Kolej Siswi</h2>
+                <div class="college-grid">
+                <div class="college">
+                        <img src="assets/zamrud.png" alt="Kolej Zamrud" class="enlargeable">
+                        <div class="college-name">KOLEJ ZAMRUD</div>
+                    </div>
+                    <div class="college">
+                        <img src="assets/kristalA.png" alt="Kolej Kristal A" class="enlargeable">
+                        <div class="college-name">KOLEJ KRISTAL A</div>
+                    </div>
+                    <div class="college">
+                        <img src="assets/kristalB.png" alt="Kolej Kristal B" class="enlargeable">
+                        <div class="college-name">KOLEJ KRISTAL B</div>
+                    </div>
+                    <div class="college">
+                        <img src="assets/nilam.png" alt="Kolej Nilam" class="enlargeable">
+                        <div class="college-name">KOLEJ NILAM</div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2024 UiTM Pulau Pinang. All Rights Reserved.</p>
+        </div>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <div class="modal-content">
+            <img id="modalImage" src="">
+        </div>
+    </div>
+
+    <script>
+    function updateDateTime() {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const now = new Date();
+        const formattedDate = now.toLocaleDateString('en-MY', options);
+        const formattedTime = now.toLocaleTimeString('en-MY');
+
+        document.getElementById('currentDate').innerHTML = formattedDate;
+        document.getElementById('currentTime').innerHTML = formattedTime;
+    }
+
+    // Update time every second
+    setInterval(updateDateTime, 1000);
+    updateDateTime(); // Initial call
+
+    // Show or hide the button based on scroll position
+    window.addEventListener('scroll', function () {
+        const button = document.getElementById('goTopBtn');
+        if (window.scrollY > 300) { // Show button when scrolled more than 300px
+            button.classList.add('show');
+        } else {
+            button.classList.remove('show');
         }
-      })
-      .then(response => {
-        document.getElementById('addressForm').style.display = 'none';
-        document.getElementById('thankYouMessage').style.display = 'block';
-      })
-      .catch(error => alert('Error submitting address: ' + error.message));
     });
-  </script>
+
+    document.getElementById('goTopBtn').addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Modal functionality
+    const modal = document.getElementById("imageModal");
+    const modalImage = document.getElementById("modalImage");
+    const closeButton = document.getElementsByClassName("close")[0];
+
+    // When an image is clicked, open the modal and display the clicked image
+    document.querySelectorAll('.enlargeable').forEach(image => {
+        image.onclick = function() {
+            modal.style.display = "flex";
+            modalImage.src = this.src;
+        }
+    });
+
+    // When the close button is clicked, close the modal
+    closeButton.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // Close the modal if user clicks outside the image
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    }
+    </script>
+
 </body>
 </html>
